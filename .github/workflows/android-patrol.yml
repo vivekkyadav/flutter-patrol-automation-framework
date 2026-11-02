@@ -1,0 +1,111 @@
+name: Android Patrol tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Patrol tag expression, e.g. smoke or "regression && !native" (empty = all tests)'
+        required: false
+        default: ''
+
+concurrency:
+  group: android-patrol-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: app
+
+jobs:
+  static-checks:
+    name: Analyze + unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - run: flutter --version
+      - run: flutter pub get
+
+      # Compiles and type-checks the app *and* every Patrol test file.
+      - run: flutter analyze --no-fatal-infos
+
+      # The Compass app's own unit and widget tests (from upstream).
+      - run: flutter test
+
+  android-e2e:
+    name: Patrol on Android emulator
+    needs: static-checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      PATROL_TAGS: ${{ github.event.inputs.tags }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # Hardware acceleration makes the emulator usable on GitHub-hosted Linux runners.
+      - name: Enable KVM
+        working-directory: .
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install Patrol CLI
+        run: |
+          flutter pub global activate patrol_cli
+          echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+
+      - run: flutter pub get
+
+      - name: Patrol doctor
+        run: patrol doctor
+
+      - name: Run Patrol tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          working-directory: app
+          script: ../scripts/run_android_tests.sh
+
+      - name: Upload JUnit and HTML reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: patrol-android-reports
+          path: |
+            app/build/app/outputs/androidTest-results/
+            app/build/app/reports/androidTests/
+          if-no-files-found: warn
+
+      - name: Publish test summary
+        if: always()
+        uses: mikepenz/action-junit-report@v5
+        with:
+          report_paths: 'app/build/app/outputs/androidTest-results/**/*.xml'
+          check_name: Patrol Android results
+          include_passed: true
+          require_tests: true
