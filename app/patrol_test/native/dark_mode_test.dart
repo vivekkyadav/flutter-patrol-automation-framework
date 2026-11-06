@@ -6,7 +6,7 @@ import '../support/compass_test.dart';
 void main() {
   compassTest(
     'app follows the system dark mode setting',
-    tags: [Tags.native],
+    tags: [TestTags.native],
     ($) async {
       await launchCompass($);
       final app = CompassAppRobot($);

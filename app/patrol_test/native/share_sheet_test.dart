@@ -4,7 +4,7 @@ import '../support/compass_test.dart';
 void main() {
   compassTest(
     'Share Trip opens the system share sheet and the app recovers after closing it',
-    tags: [Tags.native, Tags.androidOnly],
+    tags: [TestTags.native, TestTags.androidOnly],
     ($) async {
       await launchCompass($);
       final app = CompassAppRobot($);

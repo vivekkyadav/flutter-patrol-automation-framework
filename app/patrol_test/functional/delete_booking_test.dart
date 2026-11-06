@@ -4,7 +4,7 @@ import '../support/compass_test.dart';
 void main() {
   compassTest(
     'swiping a booking away deletes it and confirms with a snackbar',
-    tags: [Tags.regression],
+    tags: [TestTags.regression],
     ($) async {
       await launchCompass($);
       final app = CompassAppRobot($);

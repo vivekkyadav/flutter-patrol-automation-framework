@@ -4,7 +4,7 @@ import '../support/compass_test.dart';
 void main() {
   compassTest(
     'Confirm is enabled only while at least one activity is selected',
-    tags: [Tags.regression],
+    tags: [TestTags.regression],
     ($) async {
       await launchCompass($);
       final app = CompassAppRobot($);

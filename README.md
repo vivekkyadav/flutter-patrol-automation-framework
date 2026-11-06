@@ -140,7 +140,7 @@ flutter-patrol-automation-framework/
 A test reads like the user journey; selectors never appear in test files:
 
 ```dart
-compassTest('user books Amalfi Coast …', tags: [Tags.smoke, Tags.regression], ($) async {
+compassTest('user books Amalfi Coast …', tags: [TestTags.smoke, TestTags.regression], ($) async {
   await launchCompass($);
   final app = CompassAppRobot($);
 

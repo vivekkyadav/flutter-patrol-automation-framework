@@ -5,7 +5,7 @@ void main() {
   group('Search form validation', () {
     compassTest(
       'Search stays disabled until continent, dates and guests are all set',
-      tags: [Tags.regression],
+      tags: [TestTags.regression],
       ($) async {
         await launchCompass($);
         final app = CompassAppRobot($);
@@ -28,7 +28,7 @@ void main() {
 
     compassTest(
       'guest counter never goes below zero',
-      tags: [Tags.regression],
+      tags: [TestTags.regression],
       ($) async {
         await launchCompass($);
         final app = CompassAppRobot($);
@@ -49,7 +49,7 @@ void main() {
 
     compassTest(
       'tapping the selected continent again clears the selection',
-      tags: [Tags.regression],
+      tags: [TestTags.regression],
       ($) async {
         await launchCompass($);
         final app = CompassAppRobot($);

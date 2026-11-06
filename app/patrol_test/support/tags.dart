@@ -4,7 +4,7 @@
 /// patrol test --tags smoke
 /// patrol test --tags "regression && !android-only"
 /// ```
-abstract final class Tags {
+abstract final class TestTags {
   /// Fast checks that the app starts and its main screens are reachable.
   static const smoke = 'smoke';
 

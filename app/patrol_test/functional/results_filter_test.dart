@@ -4,7 +4,7 @@ import '../support/compass_test.dart';
 void main() {
   compassTest(
     'results only contain destinations from the selected continent',
-    tags: [Tags.regression],
+    tags: [TestTags.regression],
     ($) async {
       await launchCompass($);
       final app = CompassAppRobot($);

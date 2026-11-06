@@ -4,7 +4,7 @@ import '../support/compass_test.dart';
 void main() {
   compassTest(
     'Android system back on the search form goes to the trip list, not out of the app',
-    tags: [Tags.native, Tags.androidOnly],
+    tags: [TestTags.native, TestTags.androidOnly],
     ($) async {
       await launchCompass($);
       final app = CompassAppRobot($);

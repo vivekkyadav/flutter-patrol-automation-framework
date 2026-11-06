@@ -4,7 +4,7 @@ import '../support/compass_test.dart';
 void main() {
   compassTest(
     'app launches on the home screen with the signed-in user and default booking',
-    tags: [Tags.smoke],
+    tags: [TestTags.smoke],
     ($) async {
       await launchCompass($);
       final app = CompassAppRobot($);

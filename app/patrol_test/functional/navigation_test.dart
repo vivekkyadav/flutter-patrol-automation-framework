@@ -5,7 +5,7 @@ void main() {
   group('In-app navigation', () {
     compassTest(
       'Home button on the search form returns to the trip list',
-      tags: [Tags.regression],
+      tags: [TestTags.regression],
       ($) async {
         await launchCompass($);
         final app = CompassAppRobot($);
@@ -20,7 +20,7 @@ void main() {
 
     compassTest(
       'Back on the activities screen returns to the results',
-      tags: [Tags.regression],
+      tags: [TestTags.regression],
       ($) async {
         await launchCompass($);
         final app = CompassAppRobot($);
@@ -36,7 +36,7 @@ void main() {
 
     compassTest(
       'Home on the activities screen abandons the flow without creating a booking',
-      tags: [Tags.regression],
+      tags: [TestTags.regression],
       ($) async {
         await launchCompass($);
         final app = CompassAppRobot($);

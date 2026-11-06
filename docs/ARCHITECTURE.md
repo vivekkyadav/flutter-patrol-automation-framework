@@ -80,7 +80,7 @@ scoped parent (the two text fields of the date range dialog).
 | Timeouts, settle policy, logs | `patrol_test/support/test_config.dart` |
 | App id / bundle id / test dir | `app/pubspec.yaml` → `patrol:` |
 | Android runner + orchestrator | `app/android/app/build.gradle` |
-| Suites | `Tags` + `patrol test --tags` |
+| Suites | `TestTags` + `patrol test --tags` |
 | CI device | `.github/workflows/android-patrol.yml` (API 34, Pixel 6, x86_64) |
 
 ## Extending

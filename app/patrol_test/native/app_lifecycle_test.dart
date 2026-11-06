@@ -4,7 +4,7 @@ import '../support/compass_test.dart';
 void main() {
   compassTest(
     'app keeps the open booking after going to the background and coming back',
-    tags: [Tags.native],
+    tags: [TestTags.native],
     ($) async {
       await launchCompass($);
       final app = CompassAppRobot($);

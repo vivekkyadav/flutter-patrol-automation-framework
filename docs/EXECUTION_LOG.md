@@ -28,6 +28,18 @@ a link to a run, a log or a report.
 - Next: push to GitHub and let `android-patrol.yml` run. Expect a short fix-up
   loop on the first run (analyzer findings, timing); record the outcome below.
 
+### 2026-11-06 — first static analysis and unit tests
+
+- Environment: Flutter 3.47.9 stable (Dart 3.13.7), Linux, no Android SDK or emulator.
+- `flutter pub get`: resolved.
+- `flutter analyze`: 20 errors on first run. Root cause: our `Tags` class
+  clashed with `Tags` exported by `flutter_test` (`test_api`), so every
+  `Tags.smoke` etc. failed to resolve. Fix: renamed it to `TestTags`.
+  After the fix: **No issues found**.
+- `flutter test` (the Compass app's own unit and widget tests): **67/67 passed**.
+- Patrol UI tests: **still not executed**. They need an Android emulator, which
+  runs in the `android-patrol.yml` workflow on GitHub Actions.
+
 <!--
 Template for new entries:
 

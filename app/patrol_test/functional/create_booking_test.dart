@@ -4,7 +4,7 @@ import '../support/compass_test.dart';
 void main() {
   compassTest(
     'user books Amalfi Coast with a daytime and an evening activity end to end',
-    tags: [Tags.smoke, Tags.regression],
+    tags: [TestTags.smoke, TestTags.regression],
     ($) async {
       await launchCompass($);
       final app = CompassAppRobot($);

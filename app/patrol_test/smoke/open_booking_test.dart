@@ -4,7 +4,7 @@ import '../support/compass_test.dart';
 void main() {
   compassTest(
     'opening an existing booking shows its details and Home returns to the list',
-    tags: [Tags.smoke],
+    tags: [TestTags.smoke],
     ($) async {
       await launchCompass($);
       final app = CompassAppRobot($);
