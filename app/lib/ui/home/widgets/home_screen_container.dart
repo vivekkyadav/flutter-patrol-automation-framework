@@ -30,6 +30,19 @@ class _HomeScreenContainerState extends State<HomeScreenContainer> {
   }
 
   @override
+  void didUpdateWidget(covariant HomeScreenContainer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // The "/" page stays mounted under every child route, so this State (and
+    // its view model) survives a round trip such as Home -> ... -> Booking ->
+    // Home. GoRouter re-runs the route builder on that navigation, which
+    // creates a new LogoutViewModel; use that as the signal to reload so a
+    // booking created meanwhile shows up in the list.
+    if (!identical(oldWidget.logoutViewModel, widget.logoutViewModel)) {
+      _viewModel.load.execute();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return HomeScreen(
       viewModel: _viewModel,
