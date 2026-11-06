@@ -17,7 +17,7 @@
 ├──────────────────────────────────────────────┤
 │ Patrol         finders ($), native automator ($.platform), JUnit runner
 ├──────────────────────────────────────────────┤
-│ App under test lib/ (unchanged), development configuration (local JSON data)
+│ App under test lib/ (upstream + one bug fix), development configuration (local JSON data)
 └──────────────────────────────────────────────┘
 ```
 

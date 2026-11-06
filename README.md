@@ -23,17 +23,18 @@ executed in CI and documented**:
 | Gate | Description | Status |
 |---|---|---|
 | G1 | Application selected, source vendored, licence checked | ✅ Done |
-| G2 | Patrol integrated (pubspec, Android runner, orchestrator) | ✅ Done — *config written, first CI run pending* |
-| G3 | First Patrol test passes on an Android emulator | ⏳ Pending first CI run |
+| G2 | Patrol integrated (pubspec, Android runner, orchestrator) | ✅ Done — verified by a local emulator run |
+| G3 | First Patrol test passes on an Android emulator | ✅ Done locally (API 34 emulator, 2026-11-07) — ⏳ CI run pending |
 | G4 | Framework architecture (robots, flows, config, tags) | ✅ Done |
-| G5 | Functional coverage: 13 smoke + regression scenarios (8 files) | ✅ Written — ⏳ not yet executed |
-| G6 | Native interactions: 4 scenarios (background, dark mode, back, share sheet) | ✅ Written — ⏳ not yet executed |
+| G5 | Functional coverage: 12 smoke + regression scenarios (8 files) | ✅ 12/12 pass locally — ⏳ CI run pending |
+| G6 | Native interactions: 4 scenarios (background, dark mode, back, share sheet) | ✅ 4/4 pass locally — ⏳ CI run pending |
 | G7 | iOS simulator execution | ⏳ Needs Xcode setup — see [iOS setup](docs/IOS_SETUP.md) |
 | G8 | CI: GitHub Actions, emulator, JUnit summary, report artifacts | ✅ Workflow written — ⏳ first run pending |
 | G9 | Reporting beyond JUnit (Allure) and stability metrics | 🗺️ Roadmap |
 
-> **No test in this repository is claimed to pass until a CI run shows it.**
-> The [execution log](docs/EXECUTION_LOG.md) records every verified result.
+> **Every pass claim here links to a recorded run.** The
+> [execution log](docs/EXECUTION_LOG.md) records each verified result
+> (local runs now; CI results once the workflow has run).
 
 ---
 
@@ -122,7 +123,7 @@ flutter-patrol-automation-framework/
 ├── scripts/run_android_tests.sh           # one command for local and CI runs
 ├── docs/                                  # ADR, architecture, strategy, iOS, execution log
 └── app/                                   # Compass app (upstream) + Patrol
-    ├── lib/                               # application code (unchanged)
+    ├── lib/                               # application code (one bug fix, see below)
     ├── android/app/src/androidTest/…/MainActivityTest.java   # Patrol ↔ JUnit bridge
     └── patrol_test/
         ├── support/
@@ -196,6 +197,18 @@ PATROL_TAGS=smoke scripts/run_android_tests.sh     # smoke suite only
 cd app && patrol develop -t patrol_test/functional/create_booking_test.dart
 ```
 
+On **Windows** (no bash), run Patrol directly from `app/`. Pass `--device`
+when Chrome/Edge are also listed as devices, otherwise Patrol prompts for one:
+
+```powershell
+patrol test --device emulator-5554                  # everything
+patrol test --device emulator-5554 --tags smoke     # smoke suite only
+```
+
+The Android emulator on Windows needs **Windows Hypervisor Platform**
+(`Enable-WindowsOptionalFeature -Online -FeatureName HypervisorPlatform -All`
+as Administrator, then restart); `emulator -accel-check` should report WHPX.
+
 Reports: `app/build/app/reports/androidTests/connected/debug/index.html` (HTML) and
 `app/build/app/outputs/androidTest-results/` (JUnit XML).
 
@@ -218,13 +231,21 @@ Run it manually with a tag expression from the **Actions** tab
 
 ## Changes to the upstream app
 
-Only what Patrol needs — no changes under `lib/`:
+What Patrol needs, plus one bug fix found by the suite:
 
 - `pubspec.yaml`: removed the monorepo-only `resolution: workspace` and
   `analysis_defaults` entries; added `patrol` to `dev_dependencies` and a
   `patrol:` configuration block.
 - `android/app/build.gradle`: Patrol test runner, `clearPackageData`, Android
   Test Orchestrator, no minification for debug, Java 11 target.
+- `android/settings.gradle`, `gradle-wrapper.properties`: Gradle 8.14.3,
+  AGP 8.11.1, Kotlin 2.2.20 — the minimums Flutter 3.47 accepts.
+- **Bug fix** in `lib/ui/home/widgets/home_screen_container.dart`: a booking
+  created via Search → Booking → Home did not appear on the Home list until
+  the app restarted, because the container kept one `HomeViewModel` alive for
+  the lifetime of the `/` page. It now reloads when the route is rebuilt.
+  Found by `create_booking_test`; upstream's own
+  `integration_test/app_local_data_test.dart` failed the same way.
 - `android/app/src/androidTest/.../MainActivityTest.java`: Patrol's JUnit bridge
   (from the official setup guide).
 - Removed the desktop and web platform folders, which this project does not test.
