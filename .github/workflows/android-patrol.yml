@@ -11,6 +11,12 @@ on:
         required: false
         default: ''
 
+# The default GITHUB_TOKEN is read-only on new repositories; the JUnit report
+# action needs checks: write to publish the "Patrol Android results" check.
+permissions:
+  contents: read
+  checks: write
+
 concurrency:
   group: android-patrol-${{ github.ref }}
   cancel-in-progress: true

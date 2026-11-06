@@ -91,6 +91,19 @@ a link to a run, a log or a report.
 - **Gates:** G2, G3 (local), G5 and G6 verified locally. G8 (CI) is still pending the first
   GitHub Actions run.
 
+### 2026-11-06 — first GitHub Actions run (CI)
+
+- **Run:** [Android Patrol tests #1](https://github.com/vivekkyadav/flutter-patrol-automation-framework/actions/runs/42299586045),
+  push of `0c2190c` to `main`.
+- **Result:** ✅ success. Job "Analyze + unit tests" (analyze, 67 unit tests)
+  passed in about 2 min. Job "Patrol on Android emulator" (API 34, Pixel 6, KVM, all tags)
+  passed in about 13.5 min. The JUnit and HTML reports were uploaded as the `patrol-android-reports` artifact.
+- **Issue:** the "Patrol Android results" check was not published.
+  `mikepenz/action-junit-report` needs `checks: write`, and the default
+  `GITHUB_TOKEN` is read-only on new repositories. Fix: added a workflow-level
+  `permissions:` block (`contents: read`, `checks: write`). Verify on the next run.
+- **Gates closed:** G3, G5, G6 and G8 (CI).
+
 <!--
 Template for new entries:
 

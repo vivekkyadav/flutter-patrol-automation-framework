@@ -24,17 +24,17 @@ executed in CI and documented**:
 |---|---|---|
 | G1 | Application selected, source vendored, licence checked | ✅ Done |
 | G2 | Patrol integrated (pubspec, Android runner, orchestrator) | ✅ Done — verified by a local emulator run |
-| G3 | First Patrol test passes on an Android emulator | ✅ Done locally (API 34 emulator, 2026-11-07) — ⏳ CI run pending |
+| G3 | First Patrol test passes on an Android emulator | ✅ Done — local emulator and [CI run #1](https://github.com/vivekkyadav/flutter-patrol-automation-framework/actions/runs/42299586045) |
 | G4 | Framework architecture (robots, flows, config, tags) | ✅ Done |
-| G5 | Functional coverage: 12 smoke + regression scenarios (8 files) | ✅ 12/12 pass locally — ⏳ CI run pending |
-| G6 | Native interactions: 4 scenarios (background, dark mode, back, share sheet) | ✅ 4/4 pass locally — ⏳ CI run pending |
+| G5 | Functional coverage: 12 smoke + regression scenarios (8 files) | ✅ Pass locally (12/12) and in CI |
+| G6 | Native interactions: 4 scenarios (background, dark mode, back, share sheet) | ✅ Pass locally (4/4) and in CI |
 | G7 | iOS simulator execution | ⏳ Needs Xcode setup — see [iOS setup](docs/IOS_SETUP.md) |
-| G8 | CI: GitHub Actions, emulator, JUnit summary, report artifacts | ✅ Workflow written — ⏳ first run pending |
+| G8 | CI: GitHub Actions, emulator, JUnit summary, report artifacts | ✅ Green on GitHub Actions; JUnit check needed `checks: write` (fixed) |
 | G9 | Reporting beyond JUnit (Allure) and stability metrics | 🗺️ Roadmap |
 
 > **Every pass claim here links to a recorded run.** The
-> [execution log](docs/EXECUTION_LOG.md) records each verified result
-> (local runs now; CI results once the workflow has run).
+> [execution log](docs/EXECUTION_LOG.md) records each verified result,
+> local and CI.
 
 ---
 
@@ -266,7 +266,7 @@ What Patrol needs, plus one bug fix found by the suite:
 
 ## Roadmap
 
-- [ ] First green CI run on Android; record results in the execution log (G3, G5, G6, G8)
+- [x] First green CI run on Android; results in the execution log (G3, G5, G6, G8)
 - [ ] iOS simulator run (G7) and a macOS CI job
 - [ ] Staging configuration: login/logout against the bundled Dart server (`adb reverse`)
 - [ ] Allure reporting via a custom `PatrolJUnitRunner` (Patrol's Android Allure integration)
