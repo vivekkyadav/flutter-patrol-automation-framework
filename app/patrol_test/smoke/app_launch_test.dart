@@ -10,8 +10,8 @@ void main() {
       final app = CompassAppRobot($);
 
       await app.home.waitUntilLoaded();
-      app.home.expectTitle(TestData.userTripsTitle);
-      app.home.expectBooking(TestData.defaultBookingName);
+      await app.home.expectTitle(TestData.userTripsTitle);
+      await app.home.expectBooking(TestData.defaultBookingName);
       expect(app.home.logoutButton, findsOneWidget);
     },
   );

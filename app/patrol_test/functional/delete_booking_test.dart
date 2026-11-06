@@ -9,7 +9,7 @@ void main() {
       await launchCompass($);
       final app = CompassAppRobot($);
       await app.home.waitUntilLoaded();
-      app.home.expectBooking(TestData.defaultBookingName);
+      await app.home.expectBooking(TestData.defaultBookingName);
 
       await app.home.swipeToDelete(TestData.defaultBookingName);
 

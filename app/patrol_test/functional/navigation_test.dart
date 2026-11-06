@@ -47,6 +47,8 @@ void main() {
 
         await app.activities.goHome();
         await app.home.waitUntilLoaded();
+        // Wait for the list to load before asserting an absence.
+        await app.home.expectBooking(TestData.defaultBookingName);
         app.home.expectNoBooking('${TestData.amalfiCoast}, ${TestData.europe}');
       },
     );

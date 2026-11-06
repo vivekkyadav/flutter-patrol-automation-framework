@@ -18,7 +18,7 @@ void main() {
 
       await app.booking.goHome();
       await app.home.waitUntilLoaded();
-      app.home.expectBooking(TestData.defaultBookingName);
+      await app.home.expectBooking(TestData.defaultBookingName);
     },
   );
 }

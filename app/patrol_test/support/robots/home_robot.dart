@@ -37,11 +37,25 @@ class HomeRobot {
     await $.pumpAndSettle();
   }
 
-  void expectTitle(String title) => expect($(title), findsOneWidget);
+  /// The title includes the user's name, which is also loaded asynchronously.
+  Future<void> expectTitle(String title) async {
+    await $(title).waitUntilExists();
+    expect($(title), findsOneWidget);
+  }
 
-  void expectBooking(String bookingName) =>
-      expect(bookingTile(bookingName), findsOneWidget);
+  /// Waits for [bookingName] to appear in the list, then asserts it is unique.
+  ///
+  /// The Home view model loads bookings asynchronously, and the "Book New
+  /// Trip" button that [waitUntilLoaded] waits for is rendered before the
+  /// list arrives, so a synchronous check here races the load.
+  Future<void> expectBooking(String bookingName) async {
+    await bookingTile(bookingName).waitUntilExists();
+    expect(bookingTile(bookingName), findsOneWidget);
+  }
 
+  /// Asserts [bookingName] is not listed. Only meaningful once the list has
+  /// loaded: call [expectBooking] for a booking that should be present first,
+  /// or run it after an action that already settled the list (e.g. a delete).
   void expectNoBooking(String bookingName) =>
       expect(bookingTile(bookingName), findsNothing);
 }

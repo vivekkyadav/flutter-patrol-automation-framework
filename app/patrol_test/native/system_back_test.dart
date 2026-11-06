@@ -16,7 +16,7 @@ void main() {
       await $.platform.android.pressBack();
 
       await app.home.waitUntilLoaded();
-      app.home.expectBooking(TestData.defaultBookingName);
+      await app.home.expectBooking(TestData.defaultBookingName);
     },
   );
 }
