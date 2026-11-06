@@ -78,12 +78,15 @@ class SearchFormRobot {
   }
 
   /// The guest counter is the [Text] between the - and + buttons.
+  ///
+  /// The "Who" label sits in an outer Row that also contains both buttons,
+  /// so take the *nearest* Row around the - button (find.ancestor lists the
+  /// closest ancestor first): its only Text is the counter.
   int get guestCount {
-    final counter = $(Row)
-        .containing(removeGuestButton)
-        .containing(addGuestButton)
-        .last
-        .$(Text);
+    final quantityRow = find
+        .ancestor(of: removeGuestButton, matching: find.byType(Row))
+        .first;
+    final counter = $(quantityRow).$(Text);
     return int.parse(counter.text!);
   }
 
