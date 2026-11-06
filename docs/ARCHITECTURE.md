@@ -13,7 +13,7 @@
 │ Screen robots  support/robots/*_robot.dart
 │                The only place that knows selectors and gestures.
 ├──────────────────────────────────────────────┤
-│ Support        compass_test.dart · test_config.dart · test_data.dart · tags.dart
+│ Support        compass_harness.dart · test_config.dart · test_data.dart · tags.dart
 ├──────────────────────────────────────────────┤
 │ Patrol         finders ($), native automator ($.platform), JUnit runner
 ├──────────────────────────────────────────────┤

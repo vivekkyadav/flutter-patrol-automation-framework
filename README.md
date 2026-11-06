@@ -126,7 +126,7 @@ flutter-patrol-automation-framework/
     ├── android/app/src/androidTest/…/MainActivityTest.java   # Patrol ↔ JUnit bridge
     └── patrol_test/
         ├── support/
-        │   ├── compass_test.dart          # compassTest() wrapper + launchCompass()
+        │   ├── compass_harness.dart       # compassTest() wrapper + launchCompass()
         │   ├── compass_app_robot.dart     # facade over all robots + multi-screen flows
         │   ├── robots/                    # one robot per screen (selectors live here only)
         │   ├── test_data.dart             # seed data, dates, asset-driven expectations

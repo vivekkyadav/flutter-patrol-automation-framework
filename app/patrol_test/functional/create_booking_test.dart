@@ -1,5 +1,5 @@
 import '../support/compass_app_robot.dart';
-import '../support/compass_test.dart';
+import '../support/compass_harness.dart';
 
 void main() {
   compassTest(
