@@ -169,6 +169,9 @@ a link to a run, a log or a report.
   (8m11s, 8m03s, 7m53s). 0 `pm clear` runs and 0 remove-task kills in logcat.
 - **CI diagnostics:** the script now also prints `crash_summary.txt` (including remove-task
   lines) into the step log, so it can be read without downloading the artifact.
+- **CI result:** [run #4](https://github.com/vivekkyadav/flutter-patrol-automation-framework/actions/runs/42322433202)
+  (commit `94dc893`): ✅ success. "Patrol Android results": **16 tests run, 16 passed, 0 skipped,
+  0 failed**. Patrol job about 12.7 min.
 
 <!--
 Template for new entries:
