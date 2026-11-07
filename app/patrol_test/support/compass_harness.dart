@@ -33,9 +33,9 @@ void compassTest(
 /// Starts the Compass app with the **development** configuration.
 ///
 /// The development configuration reads destinations and activities from the
-/// JSON files in `assets/` and keeps bookings in memory. Combined with
-/// Patrol's `clearPackageData` + Android Test Orchestrator setup, every test
-/// starts from the same known state: user "Sofie" with one default booking
+/// JSON files in `assets/` and keeps bookings in memory. Combined with the
+/// Android Test Orchestrator (a new app process per test), every test starts
+/// from the same known state: user "Sofie" with one default booking
 /// ("Alaska, North America").
 ///
 /// This mirrors how the upstream `integration_test/app_local_data_test.dart`

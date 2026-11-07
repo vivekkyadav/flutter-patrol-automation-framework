@@ -29,10 +29,18 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
 
-        // Patrol: run Dart tests through Patrol's JUnit runner and give each
-        // test a fresh app process with cleared data (test isolation).
+        // Patrol: run Dart tests through Patrol's JUnit runner. The Orchestrator
+        // (below) gives each test a fresh app process.
+        //
+        // clearPackageData is intentionally NOT set. Its `pm clear` between
+        // tests could run while the previous test's process was still dying,
+        // leave that task half-removed, and the system's "Destroy timeout of
+        // remove-task" then killed the NEXT test's new process ("Test
+        // instrumentation process crashed" in CI). The local-data
+        // configuration the tests use persists nothing to disk, so a fresh
+        // process already gives a clean state. Revisit if tests start using
+        // SharedPreferences (e.g. the remote/staging configuration).
         testInstrumentationRunner "pl.leancode.patrol.PatrolJUnitRunner"
-        testInstrumentationRunnerArguments clearPackageData: "true"
     }
 
     // Patrol: Android Test Orchestrator runs every test in its own instrumentation.

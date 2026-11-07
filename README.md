@@ -236,8 +236,9 @@ What Patrol needs, plus one bug fix found by the suite:
 - `pubspec.yaml`: removed the monorepo-only `resolution: workspace` and
   `analysis_defaults` entries; added `patrol` to `dev_dependencies` and a
   `patrol:` configuration block.
-- `android/app/build.gradle`: Patrol test runner, `clearPackageData`, Android
-  Test Orchestrator, no minification for debug, Java 11 target.
+- `android/app/build.gradle`: Patrol test runner, Android Test Orchestrator
+  (no `clearPackageData`; see [Architecture](docs/ARCHITECTURE.md#test-isolation-and-data)),
+  no minification for debug, Java 11 target.
 - `android/settings.gradle`, `gradle-wrapper.properties`: Gradle 8.14.3,
   AGP 8.11.1, Kotlin 2.2.20 — the minimums Flutter 3.47 accepts.
 - **Bug fix** in `lib/ui/home/widgets/home_screen_container.dart`: a booking
@@ -256,7 +257,7 @@ What Patrol needs, plus one bug fix found by the suite:
   complex before it ran reliably. This project tracks gates (G1–G9) and does not
   mark a gate done without evidence.
 - **Deterministic data over clever waits.** Tests use the app's local-data
-  configuration, Patrol's per-test app restart (orchestrator + `clearPackageData`),
+  configuration, a new app process per test (Android Test Orchestrator),
   and read expectations from the same JSON the app loads.
 - **Date pickers in text-input mode.** Tapping calendar day numbers breaks around
   month ends; typing dates using `MaterialLocalizations` works on any day.

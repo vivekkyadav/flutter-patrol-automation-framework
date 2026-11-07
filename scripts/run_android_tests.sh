@@ -54,8 +54,13 @@ if [[ $status -ne 0 ]]; then
   adb exec-out screencap -p > "$diag_dir/screen_on_failure.png" 2>/dev/null || true
   adb shell ls /data/tombstones > "$diag_dir/tombstones.txt" 2>&1 || true
   # Short index of crash signatures for a quick look in the artifact.
-  grep -E 'FATAL EXCEPTION|Fatal signal|has died|ANR in|crash|tombstone' \
+  # Includes the Orchestrator teardown-race signature (remove-task kills).
+  grep -E 'FATAL EXCEPTION|Fatal signal|has died|ANR in|crash|tombstone|remove-task|remove task|failed to attach' \
     "$diag_dir/logcat.txt" > "$diag_dir/crash_summary.txt" 2>/dev/null || true
+  # Also print it, so the CI job log shows it without downloading the artifact.
+  echo "----- crash_summary.txt (first 200 lines) -----"
+  head -n 200 "$diag_dir/crash_summary.txt" || true
+  echo "----- end crash_summary.txt -----"
 fi
 
 exit "$status"

@@ -53,8 +53,12 @@ scoped parent (the two text fields of the date range dialog).
 
 ## Test isolation and data
 
-- `testInstrumentationRunnerArguments clearPackageData: "true"` + Android Test
-  Orchestrator: each test runs in a new app process with cleared storage.
+- Android Test Orchestrator: each test runs in a new app process. The tests
+  use the local-data configuration, which keeps all state in memory, so a new
+  process is a clean state. `clearPackageData` is deliberately off: its
+  `pm clear` raced the previous process's teardown and got the next test's
+  process killed (see the 2026-11-07 entry in the execution log). Turn it back on only if
+  tests start persisting data (e.g. SharedPreferences in the staging config).
 - `launchCompass()` starts the app with `providersLocal` (in-memory repositories
   seeded from `assets/*.json`), the same way the upstream integration test does.
 - Every test therefore starts with: user "Sofie", one booking "Alaska, North America".

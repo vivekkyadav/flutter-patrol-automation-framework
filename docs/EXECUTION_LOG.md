@@ -143,6 +143,33 @@ a link to a run, a log or a report.
   is only used by the remote/staging providers), so per-test isolation would still come from
   the Orchestrator's fresh process.
 
+### 2026-11-07 — CI run #3: instrumentation crashes traced to `clearPackageData`
+
+- **Run:** [#3](https://github.com/vivekkyadav/flutter-patrol-automation-framework/actions/runs/42317960410), commit `8ccc5f2`.
+  "Expected 16 tests, received 14": "Test instrumentation process crashed" for
+  `navigation_test` ("Back on the activities screen…") and `search_form_validation_test`
+  ("tapping the selected continent again…"). 14/14 reported tests passed. Run #2's victim was
+  `share_sheet_test`, so the victim varies.
+- **Root cause** (from local logcat, comparing a killed run with a passing one):
+  - Passing run: the previous test's process exits, *then* the Orchestrator's
+    `clearPackageData` runs `pm clear` ("Force stopping … clear data").
+  - Killed run: `pm clear` arrives ~20 ms *before* the old process exits, while its window CLOSE
+    transition is in flight ("removeAppToken: Attempted to remove non-existing token").
+    The task is left half-removed. About 1 s later, `ActivityTaskManager: Destroy timeout of
+    remove-task` kills the app's process, which by then is the **next** test's freshly
+    started process ("Killing <pid> … remove task", "failed to attach").
+  - It is a race, so it gets likelier as the emulator slows down over a long run. That matches CI
+    (crashes late in the suite) and the local repro (only after about 25 instrumentations).
+- **Fix:** removed `testInstrumentationRunnerArguments clearPackageData: "true"`. Isolation
+  is unchanged in practice: the Orchestrator still starts a new process per test, and the
+  local-data configuration keeps all state in memory (no SharedPreferences, files or DB).
+  Documented in `build.gradle` and `docs/ARCHITECTURE.md`. Re-enable it if tests start persisting data.
+- **Verification:** 3 full suites back to back on the same long-running emulator
+  (about 50 earlier instrumentations, swiftshader, no window): **16/16, 16/16, 16/16**
+  (8m11s, 8m03s, 7m53s). 0 `pm clear` runs and 0 remove-task kills in logcat.
+- **CI diagnostics:** the script now also prints `crash_summary.txt` (including remove-task
+  lines) into the step log, so it can be read without downloading the artifact.
+
 <!--
 Template for new entries:
 
