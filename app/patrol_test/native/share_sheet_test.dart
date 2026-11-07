@@ -14,10 +14,10 @@ void main() {
 
       await app.booking.share();
 
-      // The Android share sheet is a separate system UI. Close it with the
-      // hardware back button (native action), then check the app state.
-      await Future<void>.delayed(const Duration(seconds: 2));
-      await $.platform.android.pressBack();
+      // The Android share sheet is a separate system UI. Wait for it to be
+      // on screen, close it with the hardware back button (native action),
+      // and wait for the app to be resumed before checking its state.
+      await ShareSheetRobot($).closeWithBack();
 
       await app.booking.waitUntilLoaded();
       app.booking.expectDestination(TestData.defaultBookingDestination);

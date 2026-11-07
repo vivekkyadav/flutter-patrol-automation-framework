@@ -12,6 +12,7 @@ export 'robots/booking_robot.dart';
 export 'robots/home_robot.dart';
 export 'robots/results_robot.dart';
 export 'robots/search_form_robot.dart';
+export 'robots/share_sheet_robot.dart';
 export 'test_data.dart';
 
 /// One object that gives a test access to every screen robot, plus
