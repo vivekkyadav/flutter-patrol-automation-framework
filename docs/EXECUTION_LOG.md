@@ -104,6 +104,45 @@ a link to a run, a log or a report.
   `permissions:` block (`contents: read`, `checks: write`). Verify on the next run.
 - **Gates closed:** G3, G5, G6 and G8 (CI).
 
+### 2026-11-06 — CI run #2: share sheet flake (investigated locally)
+
+- **Run:** [#2](https://github.com/vivekkyadav/flutter-patrol-automation-framework/actions/runs/42302026511), push of `5617557`.
+  Attempt 1 failed before any test ran: the system-image download on the runner was corrupt
+  ("Error on ZipFile unknown archive"). Attempt 2: the "Patrol Android results" check was published
+  (the `checks: write` fix works) with 15/15 passed, but the job failed with
+  "Expected 16 tests, received 15. Test instrumentation process crashed" on
+  `native/share_sheet_test`. The emulator logged a gfxstream `glWaitSync error 0x501` shortly before.
+- **Local reproduction** (API 34, `-gpu swiftshader_indirect`, `-no-window`, animations off):
+
+  | Variant | Runs | Passed | Notes |
+  |---|---|---|---|
+  | Original test (fixed 2 s delay, then Back) | 10 | 10 | chooser took 1.4–1.9 s to display; Back sometimes only ~0.1 s after it |
+  | Native view-tree queries on the chooser package | 10 + 15 | 8 + 11 | "A SemanticsHandle was active at the end of the test" (1–2×); 3× "instrumentation crashed" |
+  | **Lifecycle-based** (final) | 15 | **15** | cold emulator |
+  | Full suite with the final version, back to back | 2 | **16/16, 16/16** | 8m 33s, 8m 30s |
+
+- **Findings:**
+  1. The fixed 2 s delay before Back has almost no margin even on an accelerated emulator,
+     so on the slower CI runner Back can arrive while the chooser is still launching.
+     Fix: `ShareSheetRobot` waits until the app leaves `resumed` (chooser in front),
+     presses Back, then waits for `AppLifecycleState.resumed` before asserting.
+  2. Native view-tree queries (`waitUntilVisible`/`getNativeViews`) run through Android
+     accessibility and can switch Flutter semantics on mid-test, which fails flutter_test's
+     end-of-test check. The robot avoids them.
+  3. The "instrumentation process crashed" signature reproduced locally (3/15) on an emulator
+     that had already run about 25 instrumentations. Logcat:
+     `ActivityTaskManager: Destroy timeout of remove-task` for the previous instrumentation's task,
+     then `Killing <new pid>:com.example.compass_app ... remove task` before the new test
+     process attached. That is a teardown race in the Orchestrator/`clearPackageData` cycle,
+     not the share-sheet logic. It did not occur on a cold emulator (0 in 15 + 32 test runs).
+- **Diagnostics added:** `scripts/run_android_tests.sh` now streams logcat for the whole run
+  and, on failure, saves `dumpsys activity`, a screenshot, the tombstone list and a crash-signature
+  grep under `app/build/app/reports/androidTests/diagnostics/` (uploaded by CI).
+- **Open:** if CI shows the remove-task kill again, the next step is to test the suite without
+  `clearPackageData`. The local-data configuration persists nothing to disk (SharedPreferences
+  is only used by the remote/staging providers), so per-test isolation would still come from
+  the Orchestrator's fresh process.
+
 <!--
 Template for new entries:
 
